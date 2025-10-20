@@ -1,0 +1,58 @@
+Task 8 — Cupcake app (order flow)
+8.1 Cupcake order flow (shared OrderViewModel)
+OrderViewModel.kt
+
+package com.example.app
+
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+
+class OrderViewModel : ViewModel() {
+    private val _flavor = MutableLiveData<String?>()
+    val flavor: LiveData<String?> = _flavor
+
+    private val _quantity = MutableLiveData(1)
+    val quantity: LiveData<Int> = _quantity
+
+    private val _date = MutableLiveData<String?>()
+    val date: LiveData<String?> = _date
+
+    fun setFlavor(f: String) { _flavor.value = f }
+    fun setQuantity(q: Int) { _quantity.value = q }
+    fun setDate(d: String) { _date.value = d }
+    fun resetOrder() {
+        _flavor.value = null
+        _quantity.value = 1
+        _date.value = null
+    }
+
+    fun getOrderSummary(): String {
+        return "Flavor: ${_flavor.value ?: "not set"}\nQuantity: ${_quantity.value}\nPickup: ${_date.value ?: "not set"}"
+    }
+}
+
+
+
+
+
+
+
+
+
+
+8.2 Send order to another app (Intent) and cancel
+From Fragment/Activity once order is set:
+
+val summary = orderViewModel.getOrderSummary()
+val sendIntent = Intent().apply {
+    action = Intent.ACTION_SEND
+    putExtra(Intent.EXTRA_TEXT, summary)
+    type = "text/plain"
+}
+val shareIntent = Intent.createChooser(sendIntent, "Share order via")
+startActivity(shareIntent)
+To cancel:
+
+orderViewModel.resetOrder()
+Toast.makeText(requireContext(), "Order canceled", Toast.LENGTH_SHORT).show()
