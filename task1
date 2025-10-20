@@ -1,0 +1,46 @@
+package com.example.clickableexample
+
+fun main(){
+    val input:Int?=readLine()?.toIntOrNull()
+    if(input !=null){
+        val square=input*input
+        println("square of $input is $square")
+
+    }
+    else{
+        println("input is null")
+    }
+}
+-------
+package com.example.clickableexample
+
+import kotlin.random.Random
+import kotlin.random.nextInt
+
+fun main(){
+    val target=Random.nextInt(1,101)
+    var guess:Int?=null
+    println("Guess the number between 1 to 101")
+    while(guess!=target){
+        print("enter your guess")
+        guess= readLine()?.toIntOrNull()
+        if(guess == null) {
+            println("Please enter a valid number")
+            continue
+        }
+        when{
+            guess<target->println("too low!try again")
+            guess>target->println("too high!try again")
+            else->println("You've guessed it.It is $target")
+        }
+    }
+}
+------package com.example.clickableexample
+
+fun greet(name:String,message:String="Welcome"){
+    println("$message,$name")
+}
+fun main(){
+    greet("to mad lab")
+    greet("CseE","This is")
+}
