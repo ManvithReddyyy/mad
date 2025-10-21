@@ -1,0 +1,46 @@
+import java.sql.DriverManager;
+import java.sql.*;
+public class CreateDatabase{
+    public static void main(String args[]){
+        try{
+
+	   //1.Loading Driver specific to the Database
+	   //2. Establishing Connection using DriverManager class with createConnection(url,username,pwd) method
+	   //3.Sending Statement using Connection object with createStatement(query) or prepareStatement() methods
+	   //4.Executing Statement
+	   //5. Processing Results.
+            
+	    Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/employee","root","devi");
+            
+	    String qry3="select * from emp";
+	    Statement st2=con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs=st2.executeQuery(qry3);
+
+	    //Creation of ResultSetMetadata object
+	    ResultSetMetaData rmd=rs.getMetaData();
+	    System.out.println("-----------------------------------------------------------------");
+	    for(int i=1;i<=rmd.getColumnCount();i++){
+	    	String cname=rmd.getColumnName(i);
+		System.out.print(cname+"\t");
+	    }	  
+	    System.out.println("\n-----------------------------------------------------------------");
+
+	    rs.afterLast();
+	   //rows from last to first
+            while(rs.previous()){
+                String name=rs.getString(2);
+                int eid=rs.getInt(1);
+                double salary=rs.getDouble(4);
+                String dname=rs.getString(3);
+                System.out.println(name+"\t"+eid+"\t"+salary+"\t"+dname);
+            }
+          
+          
+
+        }catch(Exception e){
+            System.out.println("Error............."+e.getMessage());
+        }
+    }
+}
+

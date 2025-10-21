@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Simple Register, Login, Payment</title>
+  <style>
+    body {
+      text-align: center;
+      padding: 20px;
+      border: 1px solid black;
+      border-radius: 5px;
+      max-width: 400px;
+      margin: 50px auto;
+      font-family: Arial, sans-serif;
+    }
+    input {
+      margin: 5px;
+      padding: 5px;
+    }
+  </style>
+</head>
+<body>
+  <h3>Register</h3>
+  Name: <input id="name"><br><br>
+  Email: <input id="email"><br><br>
+  <button onclick="register()">Register</button>
+  <p id="msg"></p>
+
+  <div id="login" style="display:none;">
+    <h3>Login</h3>
+    Email: <input id="loginEmail"><br><br>
+    <button onclick="login()">Login</button>
+    <p id="loginMsg"></p>
+  </div>
+
+  <div id="payment" style="display:none;">
+    <h3>Payment</h3>
+    Amount: <input type="number" id="amt"><br><br>
+    <button onclick="pay()">Pay</button>
+    <p id="payMsg"></p>
+  </div>
+
+  <script>
+    let userEmail = "";
+
+    function register() {
+      let name = document.getElementById("name").value;
+      let email = document.getElementById("email").value;
+
+      if (name === "" || email === "") {
+        alert("Enter name and email");
+        return;
+      }
+
+      userEmail = email;
+      document.getElementById("msg").innerText = "Registered! Now login.";
+      document.getElementById("login").style.display = "block";
+    }
+
+    function login() {
+      let e = document.getElementById("loginEmail").value;
+
+      if (e === userEmail) {
+        document.getElementById("loginMsg").innerText = "Login success!";
+        document.getElementById("payment").style.display = "block";
+      } else {
+        document.getElementById("loginMsg").innerText = "Invalid email!";
+      }
+    }
+
+    function pay() {
+      let amt = document.getElementById("amt").value;
+
+      if (amt === "" || amt <= 0) {
+        alert("Enter valid amount");
+        return;
+      }
+
+      document.getElementById("payMsg").innerText = "Paid ₹" + amt + " successfully!";
+    }
+  </script>
+</body>
+</html>

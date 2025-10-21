@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Basic Calculator</title>
+  <style>
+    .box {
+      width: 220px;
+      margin: 100px auto;
+      border: 2px solid black;
+      padding: 10px;
+      text-align: center;
+    }
+    input {
+      width: 200px;
+      height: 30px;
+      text-align: right;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="box">
+    <input type="text" id="screen" readonly>
+
+    <div>
+      <button onclick="clr()">C</button>
+      <button onclick="press('/')">/</button>
+      <button onclick="press('*')">*</button>
+      <button onclick="back()">DEL</button>
+    </div>
+    <div>
+      <button onclick="press('7')">7</button>
+      <button onclick="press('8')">8</button>
+      <button onclick="press('9')">9</button>
+      <button onclick="press('-')">-</button>
+    </div>
+    <div>
+      <button onclick="press('4')">4</button>
+      <button onclick="press('5')">5</button>
+      <button onclick="press('6')">6</button>
+      <button onclick="press('+')">+</button>
+    </div>
+    <div>
+      <button onclick="press('1')">1</button>
+      <button onclick="press('2')">2</button>
+      <button onclick="press('3')">3</button>
+      <button onclick="calc()">=</button>
+    </div>
+    <div>
+      <button onclick="press('0')">0</button>
+      <button onclick="press('.')">.</button>
+    </div>
+  </div>
+
+  <script>
+    const screen = document.getElementById("screen");
+
+    function press(val) {
+      screen.value += val;
+    }
+
+    function clr() {
+      screen.value = "";
+    }
+
+    function back() {
+      screen.value = screen.value.slice(0, -1);
+    }
+
+    function calc() {
+      try {
+        screen.value = eval(screen.value);
+      } catch {
+        screen.value = "Error";
+      }
+    }
+  </script>
+
+</body>
+</html>

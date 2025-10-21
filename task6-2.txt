@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body {
+  background: lightblue;
+  font-size: 20px;
+  text-align: center;
+}
+.box {
+  width: 100px; height: 100px;
+  margin: 10px auto;
+  background: white; border: 2px solid black;
+}
+
+/* Tablet */
+@media (max-width:900px) and (min-width:600px){
+  body{background: lightgreen; font-size:18px;}
+}
+
+/* Mobile */
+@media (max-width:600px){
+  body{background: lightcoral; font-size:16px;}
+}
+</style>
+</head>
+<body>
+<h3>Media Query Example</h3>
+<div class="box">Box</div>
+<p>Resize to see color & font change.</p>
+</body>
+</html>

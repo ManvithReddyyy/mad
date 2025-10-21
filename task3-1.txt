@@ -1,0 +1,28 @@
+package com.example.dbdemo;
+
+import java.sql.*;
+
+public class DBExample {
+    public static void main(String[] args) {
+        String url = "jdbc:mysql://localhost:3308/testdbb";
+        String user = "root", password = "password";
+
+        try (Connection con = DriverManager.getConnection(url, user, password);
+             Statement stmt = con.createStatement()) {
+
+            System.out.println("Connected to database");
+
+            stmt.executeUpdate("CREATE TABLE IF NOT EXISTS students (" +
+                               "id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(50), age INT)");
+
+            stmt.executeUpdate("INSERT INTO students(name, age) VALUES ('Alice', 20), ('Bob', 22)");
+
+            ResultSet rs = stmt.executeQuery("SELECT * FROM students");
+            while (rs.next()) 
+                System.out.println(rs.getInt("id") + " " + rs.getString("name") + " " + rs.getInt("age"));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
