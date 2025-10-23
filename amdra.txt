@@ -1,0 +1,646 @@
+merge sort
+----------
+import java.util.*;
+
+class MergeSort {
+    public static void main(String args[]) {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.println("Enter number of elements:");
+        int n = sc.nextInt();
+
+        int a[] = new int[n];
+        System.out.println("Enter elements:");
+        for (int i = 0; i < n; i++)
+            a[i] = sc.nextInt();
+
+        System.out.println("Original Array:");
+        for (int i = 0; i < n; i++)
+            System.out.print(a[i] + " ");
+        System.out.println();
+
+        long startTime = System.nanoTime();
+
+        mergeSort(a, 0, n - 1);
+
+        long endTime = System.nanoTime();
+
+        System.out.println("Sorted Array:");
+        for (int i = 0; i < n; i++)
+            System.out.print(a[i] + " ");
+        System.out.println();
+
+        double duration = (endTime - startTime) / 1000000.0;
+        System.out.println("Time taken by Merge Sort: " + duration + " ms");
+    }
+
+    static void mergeSort(int a[], int low, int high) {
+        if (low < high) {
+            int mid = (low + high) / 2;
+            mergeSort(a, low, mid);
+            mergeSort(a, mid + 1, high);
+            merge(a, low, mid, high);
+            System.out.println("After merging from index "+ low+ " to " + high + "): " + Arrays.toString(a));
+        }
+    }
+
+    static void merge(int a[], int low, int mid, int high) {
+        int i = low;
+        int j = mid + 1;
+        int k = low;
+        int c[] = new int[a.length];
+
+        while (i <= mid && j <= high) {
+            if (a[i] <= a[j]) {
+                c[k] = a[i];
+                i++;
+            } else {
+                c[k] = a[j];
+                j++;
+            }
+            k++;
+        }
+
+        while (i <= mid) {
+            c[k] = a[i];
+            i++;
+            k++;
+        }
+
+        while (j <= high) {
+            c[k] = a[j];
+            j++;
+            k++;
+        }
+
+        for (i = low; i <= high; i++)
+            a[i] = c[i];
+    }
+}
+
+
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Input sizes
+n_values = np.linspace(1, 1000, 100)
+
+# Time complexities
+best_case = n_values * np.log2(n_values)
+average_case = n_values * np.log2(n_values)
+worst_case = n_values ** np.log2(n_values)
+
+# Plotting
+plt.figure(figsize=(10, 6))
+plt.plot(n_values, best_case, label='Best Case (O(n log n))', color='green')
+plt.plot(n_values, average_case, label='Average Case (O(n log n))', linestyle='--', color='blue')
+plt.plot(n_values, worst_case, label='Worst Case (O(n log n))', linestyle='-.', color='red')
+
+plt.title('Merge Sort Time Complexities')
+plt.xlabel('Input Size (n)')
+plt.ylabel('Operations')
+plt.legend()
+plt.grid(True)
+plt.tight_layout()
+plt.show()
+
+quicksort
+-----------------
+import java.util.*;
+
+class QuickSort {
+    static void quickSort(int a[], int low, int high) {
+        if (low < high) {
+            int pos = partition(a, low, high);
+            System.out.println("After partition (pivot at index " + pos + "): " + Arrays.toString(a));
+            quickSort(a, low, pos - 1);
+            quickSort(a, pos + 1, high);
+        }
+    }
+
+    static int partition(int a[], int low, int high) {
+        int pivot = a[low];
+        int i = low;
+        int j = high;
+
+        while (i < j) {
+            while (i <= high && a[i] <= pivot)
+                i++;
+            while (a[j] > pivot)
+                j--;
+
+            if (i < j) {
+                int temp = a[i];
+                a[i] = a[j];
+                a[j] = temp;
+            }
+        }
+
+        int temp = a[low];
+        a[low] = a[j];
+        a[j] = temp;
+
+        return j;
+    }
+
+    public static void main(String args[]) {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.println("Enter number of elements:");
+        int n = sc.nextInt();
+
+        int a[] = new int[n];
+        System.out.println("Enter elements:");
+        for (int i = 0; i < n; i++)
+            a[i] = sc.nextInt();
+
+        System.out.println("Original Array: " + Arrays.toString(a));
+
+        long startTime = System.nanoTime();
+
+        quickSort(a, 0, n - 1);
+
+        long endTime = System.nanoTime();
+
+        System.out.println("Sorted Array: " + Arrays.toString(a));
+
+        double duration = (endTime - startTime) / 1000000.0;
+        System.out.println("Time taken by Quick Sort: " + duration + " ms");
+
+        sc.close();
+    }
+}
+
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Input sizes
+n_values = np.linspace(1, 1000, 100)
+
+# Time complexities
+best_case = n_values * np.log2(n_values)
+average_case = n_values * np.log2(n_values)
+worst_case = n_values ** 2
+
+# Plotting
+plt.figure(figsize=(10, 6))
+plt.plot(n_values, best_case, label='Best Case (O(n log n))', color='green')
+plt.plot(n_values, average_case, label='Average Case (O(n log n))', linestyle='--', color='blue')
+plt.plot(n_values, worst_case, label='Worst Case (O(n²))', linestyle='-.', color='red')
+
+plt.title('quick Sort Time Complexities')
+plt.xlabel('Input Size (n)')
+plt.ylabel('Operations')
+plt.legend()
+plt.grid(True)
+plt.tight_layout()
+plt.show()
+
+ap
+---------------
+import java.util.*;
+public class Main {
+    static int time;
+    static void dfs(int u, boolean[] visited, int[] disc, int[] low, int[] parent, boolean[] ap, List<List<Integer>> adj) {
+        int children = 0;
+        visited[u] = true;
+        disc[u] = low[u] = ++time;
+        for (int v : adj.get(u)) {
+            if (!visited[v]) {
+                children++;
+                parent[v] = u;
+                dfs(v, visited, disc, low, parent, ap, adj);
+                low[u] = Math.min(low[u], low[v]);
+                if (parent[u] == -1 && children > 1) ap[u] = true;
+                if (parent[u] != -1 && low[v] >= disc[u]) ap[u] = true;
+            } else if (v != parent[u]) {
+                low[u] = Math.min(low[u], disc[v]);
+            }
+        }
+    }
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int V = sc.nextInt();
+        int E = sc.nextInt();
+        List<List<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i < V; i++) adj.add(new ArrayList<>());
+        for (int i = 0; i < E; i++) {
+            int u = sc.nextInt();
+            int v = sc.nextInt();
+            adj.get(u).add(v);
+            adj.get(v).add(u);
+        }
+        boolean[] visited = new boolean[V];
+        int[] disc = new int[V];
+        int[] low = new int[V];
+        int[] parent = new int[V];
+        boolean[] ap = new boolean[V];
+        Arrays.fill(parent, -1);
+        for (int i = 0; i < V; i++) if (!visited[i]) dfs(i, visited, disc, low, parent, ap, adj);
+        for (int i = 0; i < V; i++) if (ap[i]) System.out.print(i + " ");
+    }
+}
+
+jb
+-------------
+import java.util.*;
+class JobSequencing {
+    public static void main(String args[]) {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Enter the number of jobs: ");
+        int n = sc.nextInt();
+
+        int[] d = new int[n + 1];         // deadlines
+        int[] profits = new int[n + 1];   // profits
+
+        System.out.println("Enter deadlines:");
+        for (int i = 1; i <= n; i++) {
+            d[i] = sc.nextInt();
+        }
+
+        System.out.println("Enter profits:");
+        for (int i = 1; i <= n; i++) {
+            profits[i] = sc.nextInt();
+        }
+
+        // Create job index array
+        Integer[] jobIndex = new Integer[n + 1];
+        for (int i = 1; i <= n; i++) {
+            jobIndex[i] = i;
+        }
+
+        // Sort jobs in descending order of profit
+        Arrays.sort(jobIndex, 1, n + 1, (i, j) -> Integer.compare(profits[j], profits[i]));
+
+        int[] j = new int[n + 1];
+        int k = 0;
+
+        for (int idx = 1; idx <= n; idx++) {
+            int job = jobIndex[idx];
+            int x = k;
+
+            while (x >= 1 && d[j[x]] > d[job]) {
+                x--;
+            }
+
+            if (x < d[job]) {
+                for (int q = k; q > x; q--) {
+                    j[q + 1] = j[q];
+                }
+                j[x + 1] = job;
+                k++;
+            }
+        }
+
+        int totalProfit = 0;
+        System.out.println("\nJobs selected:");
+        for (int i = 1; i <= k; i++) {
+            System.out.print("Job" + j[i] + " ");
+            totalProfit += profits[j[i]];
+        }
+
+        System.out.println("\nTotal number of jobs done: " + k);
+        System.out.println("Total profit: " + totalProfit);
+        sc.close();
+    }
+}
+
+knapsack
+----------------------
+import java.util.*;
+class Item {
+    double profit, weight, ratio;
+
+    public Item(double profit, double weight) {
+        this.profit = profit;
+        this.weight = weight;
+        this.ratio = profit / weight;
+    }
+}
+
+public class GreedyKnapsack {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Enter number of items: ");
+        int n = sc.nextInt();
+
+        System.out.print("Enter knapsack capacity: ");
+        double capacity = sc.nextDouble();
+
+        Item[] items = new Item[n];
+        for (int i = 0; i < n; i++) {
+            System.out.print("Enter profit and weight for item " + (i + 1) + ": ");
+            double profit = sc.nextDouble();
+            double weight = sc.nextDouble();
+            items[i] = new Item(profit, weight);
+        }
+ // Sort items in descending order of profit/weight ratio
+        Arrays.sort(items, (a, b) -> Double.compare(b.ratio, a.ratio));
+
+        double[] x = new double[n];  // Fraction of items taken
+        double totalProfit = 0;
+        double remainingCapacity = capacity;
+
+        for (int i = 0; i < n; i++) {
+            if (items[i].weight <= remainingCapacity) {
+                x[i] = 1.0;
+                remainingCapacity -= items[i].weight;
+                totalProfit += items[i].profit;
+            } else {
+                x[i] = remainingCapacity / items[i].weight;
+                totalProfit += x[i] * items[i].profit;
+                break; // Knapsack is full
+            }
+        }
+
+        System.out.println("\nFractions of items taken:");
+        for (int i = 0; i < n; i++) {
+            System.out.printf("Item %d : %.2f\n", (i + 1), x[i]);
+        }
+
+        System.out.printf("Total profit: %.2f\n", totalProfit);
+        sc.close();
+    }
+}
+
+dijkstras
+----------------------
+import java.util.*;
+public class dijkstra {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int ne = 100;    
+        System.out.print("Enter number of vertices: ");
+        int n = sc.nextInt();
+
+        int[][] graph = new int[n][n];
+        System.out.println("Enter adjacency matrix (use " + ne + " for no edge):");
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                graph[i][j] = sc.nextInt();
+                if (i == j) graph[i][j] = 0;
+            }
+        }
+        System.out.print("Enter source vertex (0 to " + (n - 1) + "): ");
+        int src = sc.nextInt();
+
+        int[] dist = new int[n];
+        boolean[] s = new boolean[n];
+
+        Arrays.fill(dist, ne);
+        dist[src] = 0;
+
+        for (int count = 0; count < n - 1; count++) {
+            // Find vertex with min distance
+            int u = -1, min = ne;
+            for (int v = 0; v < n; v++) {
+                if (!s[v] && dist[v] < min) {
+                    min = dist[v];
+                    u = v;
+                }
+            }
+
+            if (u == -1) break; // No reachable vertex left
+            s[u] = true;
+
+            // Relax edges
+            for (int v = 0; v < n; v++) {
+                if (!s[v] && graph[u][v] != ne && dist[u] != ne && dist[u] + graph[u][v] < dist[v]) {
+                    dist[v] = dist[u] + graph[u][v];
+                }
+            }
+        }
+        System.out.println("Vertex \t Distance from Source " + src);
+        for(int i = 0; i < n; i++) {
+            System.out.println(i + " \t " + (dist[i] == ne ? "ne" : dist[i]));
+        }
+    }
+}
+
+obst
+----------------
+
+import java.util.*;
+public class obst {
+
+    public static double optimalBST(int n, int[] keys, double[] p, double[] q) {
+        double[][] cost = new double[n + 1][n + 1];
+        double[][] w = new double[n + 1][n + 1];
+        int[][] r = new int[n + 1][n + 1];
+
+        for (int i = 0; i <= n; i++) {
+            cost[i][i] = 0;
+            w[i][i] = q[i];
+        }
+
+        for (int length = 1; length <= n; length++) {
+            for (int i = 0; i <= n - length; i++) {
+                int j = i + length;
+
+                w[i][j] = w[i][j - 1] + p[j - 1] + q[j];
+
+                cost[i][j] = Double.MAX_VALUE;
+
+                for (int k = i; k < j; k++) {
+                    double currentCost = cost[i][k] + cost[k + 1][j] + w[i][j];
+
+                    if (currentCost < cost[i][j]) {
+                        cost[i][j] = currentCost;
+                        r[i][j] = k+1;
+                    }
+                }
+            }
+        }
+
+        System.out.println("Cost Table :");
+        for (int i = 0; i <= n; i++) {
+            for (int j = i; j <= n; j++) {
+                System.out.printf("c[%d][%d] = %.2f\t", i, j, cost[i][j]);
+            }
+            System.out.println();
+        }
+
+        System.out.println("\n Weight Table:");
+        for (int i = 0; i <= n; i++) {
+            for (int j = i; j <= n; j++) {
+                System.out.printf("w[%d][%d] = %.2f\t", i, j, w[i][j]);
+            }
+            System.out.println();
+        }
+
+        System.out.println("\nRoot Table:");
+        for (int i = 0; i <= n; i++) {
+            for (int j = i; j <= n; j++) {
+                System.out.printf("r[%d][%d] = %d\t", i, j, r[i][j]);
+            }
+            System.out.println();
+        }
+
+        return cost[0][n];
+    }
+
+    public static void main(String[] args) {
+        Scanner sc=new Scanner(System.in);
+        System.out.println("Enter the no of keys:");
+        int n = sc.nextInt();
+        int[] keys=new int[n];
+        double[] p=new double[n];
+        double[] q=new double[n+1];
+        System.out.println("Enter the keys:");
+        for(int i=0;i<n;i++){
+            keys[i]=sc.nextInt();
+        }
+        System.out.println("Enter the probability of internal nodes:");
+        for(int i=0;i<n;i++){
+            p[i]=sc.nextDouble();
+        }
+        System.out.println("Enter the probability of external nodes:");
+        for(int i=0;i<=n;i++){//should read n+1 values
+            q[i]=sc.nextDouble();
+        }
+
+        double minCost = optimalBST(n, keys, p, q);
+        System.out.println("\nThe total minimum cost of the tree is: " + minCost);
+    }
+}
+prims
+------------------
+import java.util.Scanner;
+public class prims5 {
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter number of vertices: ");
+        int n = sc.nextInt();
+
+       
+        int[][] cost = new int[n + 1][n + 1];
+        int INF = 100;
+
+        System.out.println("Enter the cost adjacency matrix (use " + INF + " for no edge):");
+        for (int i = 1; i <= n; i++) {
+            for (int j = 1; j <= n; j++) {
+                cost[i][j] = sc.nextInt();
+                if (i == j) {
+                    cost[i][j] =100;
+                }
+            }
+        }
+ 
+        for (int i = 1; i <= n; i++) {
+            for (int j = i + 1; j <= n; j++) {
+                cost[j][i] = cost[i][j];
+            }
+        }
+ int[][] t = new int[n - 1][2];
+        int[] near = new int[n + 1];
+        int mincost = 0;
+
+        int u = 0, v = 0, min = INF;
+        for (int i = 1; i <= n; i++) {
+            for (int j = 1; j <= n; j++) {
+                if (cost[i][j] < min) {
+                    min = cost[i][j];
+                    u = i;
+                    v = j;
+                }
+            }
+        }
+
+        t[0][0] = u;
+        t[0][1] = v;
+        mincost += cost[u][v];
+
+        near[u] = near[v] = 0;
+
+        for (int i = 1; i <= n; i++) {
+            if (i != u && i != v) {
+                if (cost[i][u] < cost[i][v]) {
+                    near[i] = u;
+                } else {
+                    near[i] = v;
+                }
+            }
+        }
+
+for (int i = 1; i < n - 1; i++) {
+            int min2 = INF;
+            int k = 0;
+
+            for (int j = 1; j <= n; j++) {
+                if (near[j] != 0 && cost[j][near[j]] < min2) {
+                    min2 = cost[j][near[j]];
+                    k = j;
+                }
+            }
+
+            t[i][0] = k;
+            t[i][1] = near[k];
+            mincost += cost[k][near[k]];
+            near[k] = 0;
+
+            for (int j = 1; j <= n; j++) {
+                if (near[j] != 0 && cost[j][k] < cost[j][near[j]]) {
+                    near[j] = k;
+                }
+            }
+        }
+
+        System.out.println("\nMinimum Spanning Tree edges:");
+        for (int i = 0; i < n - 1; i++) {
+            System.out.println(t[i][0] + " - " + t[i][1]);
+        }
+        System.out.println("Total cost of MST: " + mincost);
+
+        sc.close();
+    }
+}
+
+Kruskal
+------------------
+import java.util.*;
+
+public class KruskalDynamic {
+    static int find(int[] parent, int i) {
+        if (parent[i] != i)
+            parent[i] = find(parent, parent[i]);
+        return parent[i];
+    }
+    static void union(int[] parent, int u, int v) {
+        parent[find(parent, u)] = find(parent, v);
+    }
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter number of vertices: ");
+        int n = sc.nextInt();
+        List<int[]> edges = new ArrayList<>();
+        System.out.println("Enter edges as 'u v cost' (enter -1 to stop):");
+        while (true) {
+            int u = sc.nextInt();
+            if (u == -1) break;
+            int v = sc.nextInt();
+            int cost = sc.nextInt();
+            edges.add(new int[]{u, v, cost});
+        }
+        edges.sort(Comparator.comparingInt(a -> a[2]));
+        int[] parent = new int[n];
+        for (int i = 0; i < n; i++) parent[i] = i;
+        int mincost = 0, count = 0;
+        for (int[] e : edges) {
+            int pu = find(parent, e[0]), pv = find(parent, e[1]);
+            if (pu != pv) {
+                System.out.println(e[0] + " - " + e[1] + " : " + e[2]);
+                mincost += e[2];
+                union(parent, pu, pv);
+                count++;
+                if (count == n-1) break;
+            }
+        }
+        if (count != n-1)
+            System.out.println("No spanning tree");
+        else
+            System.out.println("Minimum cost = " + mincost);
+    }
+}
