@@ -1,0 +1,398 @@
+1a. numpy and pandas
+--------------
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# --- Step 1: Tiny Employee Dataset ---
+employee_data = {
+    'Name': ['Alice', 'Bob', 'Charlie'],
+    'Age': [28, 34, 26],
+    'Department': ['HR', 'IT', 'Finance'],
+    'Salary': [50000, 60000, 55000]
+}
+
+# --- Step 2: Print employee records ---
+print("Employee Records:")
+print(employee_data)
+
+# --- Step 3: Convert to DataFrame ---
+df = pd.DataFrame(employee_data)
+
+# --- Step 4: Descriptive statistics ---
+print("\nOverall Descriptive Statistics:")
+print(df.describe())
+
+# --- Step 5: Bar Chart – Average Salary by Department ---
+plt.figure(figsize=(6, 4))
+df.groupby('Department')['Salary'].mean().plot(kind='bar', color='skyblue')
+plt.title("Average Salary by Department")
+plt.xlabel("Department")
+plt.ylabel("Average Salary")
+plt.show()
+1b. pre processing and visualization 
+---------------------
+import pandas as pd
+import numpy as np
+
+# --- Tiny Student Dataset ---
+df = pd.DataFrame({
+    'Student': ['John', 'Emma'],
+    'Subject': ['Math', 'Science'],
+    'Marks': [85, 92],
+    'StudyHours': [10, 12]
+})
+
+print("----- DataFrame -----\n", df)
+
+# --- Pandas Operations ---
+print("\n1. Statistical summary:\n", df.describe())
+print("\n2. First record:\n", df.head(1))
+print("\n3. Average marks by Subject:\n", df.groupby('Subject')['Marks'].mean())
+print("\n4. Sorted by Marks (desc):\n", df.sort_values('Marks', ascending=False))
+print("\n5. Select row 1 Student & Marks:\n", df.loc[1, ['Student','Marks']])
+
+# --- NumPy Operations ---
+marks = df['Marks'].values
+hours = df['StudyHours'].values
+
+print("\nNumPy Operations:")
+print("Mean marks:", np.mean(marks))
+print("Total study hours:", np.sum(hours))
+print("Highest marks:", np.max(marks))
+print("Minimum study hours:", np.min(hours))
+1c.
+---------------
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Sample weather data
+df = pd.DataFrame({
+    'Date': pd.date_range('2025-06-01', periods=5),
+    'Temperature': [34,33,35,32,31],
+    'Humidity': [45,50,48,55,60],
+    'WindSpeed': [15,18,12,10,20],
+    'Rainfall': [0,0,1.2,5.4,10.2]
+})
+# --- Summary ---
+print(df.describe())
+print(f"\nMean Temp: {df['Temperature'].mean():.1f} °C")
+print(f"Max Rainfall: {df['Rainfall'].max()} mm")
+plt.figure(figsize=(10,4))
+plt.bar(df['Date'], df['Rainfall'], color='blue')
+plt.title("Daily Rainfall");
+plt.tight_layout()
+plt.show()
+
+
+PCA
+--------------------
+# Demonstration of PCA (Dimensionality Reduction)
+from sklearn.datasets import load_iris
+from sklearn.preprocessing import StandardScaler
+from sklearn.decomposition import PCA
+import matplotlib.pyplot as plt
+
+# Step 1: Load dataset
+data = load_iris()
+X = data.data
+y = data.target
+
+# Step 2: Standardize features
+X_scaled = StandardScaler().fit_transform(X)
+
+# Step 3: Apply PCA (reduce from 4D to 2D)
+pca = PCA(n_components=2)
+X_pca = pca.fit_transform(X_scaled)
+
+# Step 4: Plot the data before and after PCA
+plt.figure(figsize=(10, 4))
+
+# Before PCA (first 2 features)
+plt.subplot(1, 2, 1)
+plt.scatter(X_scaled[:, 0], X_scaled[:, 1], c=y, cmap='rainbow')
+plt.title("Before PCA")
+
+# After PCA (reduced 2D data)
+plt.subplot(1, 2, 2)
+plt.scatter(X_pca[:, 0], X_pca[:, 1], c=y, cmap='rainbow')
+plt.title("After PCA")
+
+plt.show()
+
+REF
+---------------------
+from sklearn.datasets import load_iris
+from sklearn.linear_model import LogisticRegression
+from sklearn.feature_selection import RFE
+import matplotlib.pyplot as plt
+
+# Load dataset
+data = load_iris()
+X, y = data.data, data.target
+feature_names = data.feature_names
+
+# Create Logistic Regression model
+model = LogisticRegression(max_iter=200)
+
+# Apply RFE to select 2 best features
+rfe = RFE(model, n_features_to_select=2)
+X_rfe = rfe.fit_transform(X, y)
+
+# Print selected features
+print("Selected Features:")
+for name, selected in zip(feature_names, rfe.support_):
+    if selected:
+        print(name)
+
+# Plot before and after RFE
+plt.figure(figsize=(12, 5))
+
+# Before RFE
+plt.subplot(1, 2, 1)
+plt.scatter(X[:, 0], X[:, 1], c=y, cmap='rainbow')
+plt.title("Before RFE (All Features)")
+plt.xlabel(feature_names[0])
+plt.ylabel(feature_names[1])
+
+# After RFE
+plt.subplot(1, 2, 2)
+plt.scatter(X_rfe[:, 0], X_rfe[:, 1], c=y, cmap='rainbow')
+plt.title("After RFE (Selected Features)")
+plt.xlabel("petal length")
+plt.ylabel("petal width")
+
+plt.show()
+
+MLR
+----------------
+import pandas as pd
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import *
+
+# Dataset
+data = {
+    "Age": [25, 30, 35, 40, 50, 60],
+    "BMI": [22, 25, 27, 28, 30, 32],
+    "Exercise_Hours": [6, 5, 4, 3, 2, 1],
+    "Health_Score": [85, 82, 78, 75, 70, 65]
+}
+
+df = pd.DataFrame(data)
+
+# Independent variables and dependent variable
+X = df[["Age", "BMI", "Exercise_Hours"]]
+y = df["Health_Score"]
+
+# Fit Multiple Linear Regression
+model = LinearRegression()
+model.fit(X, y)
+
+# Coefficients and Intercept
+print("Intercept (β0):", model.intercept_)
+print("Coefficients (β1, β2, β3):", model.coef_)
+
+# Predictions
+y_pred = model.predict(X)
+
+# Model Evaluation
+r2 = r2_score(y, y_pred)
+rmse = mean_squared_error(y, y_pred)
+
+print("\nPredictions:", y_pred)
+print("R² Score:", r2)
+print("RMSE:", rmse)
+
+
+SLR
+--------------------
+import pandas as pd
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import *
+
+# Dataset
+data = {
+    "Age": [25, 30, 35, 40, 50, 60],
+    "Health_Score": [85, 82, 78, 75, 70, 65]
+}
+
+df = pd.DataFrame(data)
+
+# Select only ONE independent variable (Age)
+X = df[["Age"]]         # 2D array → independent variable
+y = df["Health_Score"]  # dependent variable
+
+# Create and train the model
+model = LinearRegression()
+model.fit(X, y)
+
+# Coefficient and Intercept
+print("Intercept (β0):", model.intercept_)
+print("Coefficient (β1):", model.coef_)
+
+# Make predictions
+y_pred = model.predict(X)
+
+# Model evaluation
+r2 = r2_score(y, y_pred)
+mse = mean_squared_error(y, y_pred)
+
+print("\nPredictions:", y_pred)
+print("R² Score:", r2)
+print("MSE:", mse)	
+
+
+DecisionTree
+--------------------
+# --- Import Libraries ---
+import pandas as pd
+from sklearn.tree import DecisionTreeClassifier, plot_tree
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import *
+import matplotlib.pyplot as plt
+
+# --- Tiny Soybean-like dataset ---
+data = {
+    "Leaf_color": ["green", "yellow", "green", "yellow", "brown", "green", "yellow", "brown"],
+    "Leaf_spots": ["none", "small", "medium", "small", "large", "medium", "large", "small"],
+    "Disease": ["healthy", "alternaria", "healthy", "alternaria", "brown_spot", "healthy", "alternaria", "brown_spot"]
+}
+
+
+# --- Convert to DataFrame ---
+df = pd.DataFrame(data)
+
+# --- Features and Target ---
+X = df[["Leaf_color", "Leaf_spots"]]
+y = df["Disease"]
+
+# --- Convert categorical features to numeric (one-hot encoding) ---
+X_encoded = pd.get_dummies(X)
+
+# --- Split into Train/Test (optional for tiny dataset) ---
+X_train, X_test, y_train, y_test = train_test_split(
+    X_encoded, y, test_size=0.4, random_state=42
+)
+
+# --- Train Decision Tree ---
+clf = DecisionTreeClassifier(criterion="entropy", max_depth=3, random_state=42)
+clf.fit(X_train, y_train)
+
+# --- Predict ---
+y_pred = clf.predict(X_test)
+
+# --- Evaluation ---
+print("Confusion Matrix:\n", confusion_matrix(y_test, y_pred))
+print("\nClassification Report:\n", classification_report(y_test, y_pred))
+print("Accuracy:", accuracy_score(y_test, y_pred))
+
+# --- Visualize the Tree ---
+plt.figure(figsize=(10,5))
+plot_tree(clf, feature_names=X_encoded.columns, class_names=y.unique(), filled=True)
+plt.show()
+
+KNN
+-----------------
+# Step 1: Import libraries
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import *
+
+# Step 2: Load Iris dataset
+iris = load_iris()
+X = iris.data     # Features
+y = iris.target   # Labels
+
+# Step 3: Split dataset into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.3, random_state=42
+)
+
+# Step 4: Standardize features (important for KNN)
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
+
+# Step 5: Create KNN classifier
+knn = KNeighborsClassifier(n_neighbors=5)
+knn.fit(X_train_scaled, y_train)  # Train model
+
+# Step 6: Make predictions
+y_pred = knn.predict(X_test_scaled)
+
+# Step 7: Evaluate the model
+print("Accuracy of KNN model:", accuracy_score(y_test, y_pred))
+print("\nConfusion Matrix:\n", confusion_matrix(y_test, y_pred))
+print("\nClassification Report:\n", classification_report(y_test, y_pred))
+
+
+RandomForest
+-------------------
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import *
+import matplotlib.pyplot as plt
+
+# ---- Small Bank Dataset ----
+data = {
+    "Age": [25, 45, 35, 50],
+    "Income": [30000, 80000, 50000, 90000],
+    "LoanAmount": [10000, 20000, 14000, 25000],
+    "Loan_Status": [0, 1, 0, 1]
+}
+
+df = pd.DataFrame(data)
+X = df.drop("Loan_Status", axis=1)
+y = df["Loan_Status"]
+
+# Split ensuring both classes are in each set
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.5, random_state=42, stratify=y
+)
+
+# Train model
+rf = RandomForestClassifier(n_estimators=5, random_state=42)
+rf.fit(X_train, y_train)
+
+# Predict
+y_pred = rf.predict(X_test)
+
+# Evaluate
+print("✅ Accuracy:", accuracy_score(y_test, y_pred))
+print("\n Confusion Matrix:\n", confusion_matrix(y_test, y_pred))
+print("\n Classification Report:\n", classification_report(y_test, y_pred))
+
+
+KMeans
+------------------
+import micropip
+await micropip.install('seaborn')
+import pandas as pd
+import numpy as np
+from sklearn.datasets import load_iris
+from sklearn.cluster import KMeans
+from sklearn.metrics import silhouette_score, confusion_matrix
+import seaborn as sns
+import matplotlib.pyplot as plt
+iris = load_iris()
+X = iris.data
+y = iris.target
+kmeans = KMeans(n_clusters=3, random_state=42)
+kmeans.fit(X)
+cluster_labels = kmeans.labels_
+print("Within-cluster sum of squares (Inertia):", kmeans.inertia_)
+sil_score = silhouette_score(X, cluster_labels)
+print("Silhouette score:", sil_score)
+plt.figure(figsize=(8,6))
+sns.scatterplot(x=X[:,0], y=X[:,1], hue=cluster_labels, palette='Set2', s=100)
+plt.scatter(kmeans.cluster_centers_[:,0], kmeans.cluster_centers_[:,1], 
+            s=200, c='black', marker='X', label='Centroids')
+
+plt.xlabel('Sepal length')
+plt.ylabel('Sepal width')
+plt.title('k-means clustering of Iris Dataset')
+plt.legend()
+plt.show()
