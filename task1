@@ -12,29 +12,24 @@ fun main(){
     }
 }
 -------
-package com.example.clickableexample
-
 import kotlin.random.Random
-import kotlin.random.nextInt
 
-fun main(){
-    val target=Random.nextInt(1,101)
-    var guess:Int?=null
-    println("Guess the number between 1 to 101")
-    while(guess!=target){
-        print("enter your guess")
-        guess= readLine()?.toIntOrNull()
-        if(guess == null) {
-            println("Please enter a valid number")
-            continue
+fun main() {
+    val target = Random.nextInt(1, 101)
+    println("Guess the number between 1 and 100")
+    var guess: Int?
+    do {
+        print("Enter your guess: ")
+        guess = readLine()?.toIntOrNull()
+        when {
+            guess == null -> println("Please enter a valid number")
+            guess < target -> println("Too low! Try again.")
+            guess > target -> println("Too high! Try again.")
+            else -> println("You guessed it! It was $target")
         }
-        when{
-            guess<target->println("too low!try again")
-            guess>target->println("too high!try again")
-            else->println("You've guessed it.It is $target")
-        }
-    }
+    } while (guess != target)
 }
+
 ------package com.example.clickableexample
 
 fun greet(name:String,message:String="Welcome"){
