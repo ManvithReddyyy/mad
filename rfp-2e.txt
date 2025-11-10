@@ -1,0 +1,378 @@
+10)a)
+AddServlet.java :
+package com.example.java;
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
+
+/**
+ * Servlet implementation class AddServlet
+ */
+@WebServlet("/AddServlet")
+public class AddServlet extends HttpServlet {
+    private static final long serialVersionUID = 1L;
+
+    public AddServlet() {
+        super();
+    }
+
+    // Handles both GET and POST requests
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        // Get parameters from URL or form
+        String a = request.getParameter("num1");
+        String b = request.getParameter("num2");
+
+        double x = 0, y = 0;
+        try {
+            x = Double.parseDouble(a);
+            y = Double.parseDouble(b);
+        } catch (Exception e) {
+        }
+        double sum = x + y;
+        response.setContentType("text/html");
+        PrintWriter out = response.getWriter();
+
+        out.println("<html><body>");
+        out.println("<h2>Sum of " + x + " and " + y + " is: " + sum + "</h2>");
+        out.println("<a href='index.html'>Go Back</a>");
+        out.println("</body></html>");
+    }
+
+    // Forward POST requests to doGet
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        doGet(request, response);
+    }
+}
+
+index.html :
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Two Numbers</title>
+</head>
+<body>
+    <h2>Add Two Numbers</h2>
+    <form action="AddServlet" method="get">
+        Enter first number: <input type="text" name="num1"><br><br>
+        Enter second number: <input type="text" name="num2"><br><br>
+        <input type="submit" value="Add Numbers">
+    </form>
+</body>
+</html>
+
+
+
+8) a)
+ConfigExampleServlet.java
+
+package com.example.java;
+
+import jakarta.servlet.ServletConfig;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
+
+@WebServlet("/ConfigExampleServlet")
+public class ConfigExampleServlet extends HttpServlet {
+    private static final long serialVersionUID = 1L;
+
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+
+        ServletConfig cfg = getServletConfig();
+        ServletContext ctx = getServletContext();
+
+        String initVal = cfg.getInitParameter("sampleParam");
+        String ctxVal = ctx.getInitParameter("globalParam");
+
+        resp.setContentType("text/plain");
+        PrintWriter out = resp.getWriter();
+        out.println("Servlet init param: " + initVal);
+        out.println("Context param: " + ctxVal);
+    }
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        doGet(request, response);
+    }
+}
+
+
+web.xml : 
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee 
+                             https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd"
+         version="5.0">
+
+  <!-- Global Context Parameter -->
+  <context-param>
+    <param-name>globalParam</param-name>
+    <param-value>Hello Context</param-value>
+  </context-param>
+
+  <!-- Servlet Configuration -->
+  <servlet>
+    <servlet-name>ConfigExampleServlet</servlet-name>
+    <servlet-class>com.example.java.ConfigExampleServlet</servlet-class>
+    <init-param>
+      <param-name>sampleParam</param-name>
+      <param-value>Hello Servlet</param-value>
+    </init-param>
+  </servlet>
+
+  <!-- Servlet Mapping -->
+  <servlet-mapping>
+    <servlet-name>ConfigExampleServlet</servlet-name>
+    <url-pattern>/ConfigExampleServlet</url-pattern>
+  </servlet-mapping>
+
+</web-app>
+
+index.html :
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Config Example Servlet</title>
+</head>
+<body>
+    <h2>Welcome to Config Example Servlet Demo</h2>
+    <p>Click below to test:</p>
+    <a href="ConfigExampleServlet">Run ConfigExampleServlet</a>
+    <hr>
+    <form action="ConfigExampleServlet" method="post">
+        <button type="submit">Call Servlet (POST)</button>
+    </form>
+</body>
+</html>
+-----------------------
+7.	 a) Write a program to accept request parameters from a form and generate the response.
+method-1
+Tomcat
+ └── webapps
+     └── FormApp
+         ├── WEB-INF
+         │    ├── web.xml
+         │    └── classes
+         │         └── FormServlet.class
+         └── form.html
+⚙️ 2. Step-by-step Procedure
+🪜 Step 1: Create form.html
+html
+Copy code
+<!doctype html>
+<html>
+<head><title>Form Example</title></head>
+<body>
+  <h2>Enter Details</h2>
+  <form action="FormServlet" method="post">
+    Name: <input type="text" name="name"><br><br>
+    Email: <input type="email" name="email"><br><br>
+    <input type="submit" value="Submit">
+  </form>
+</body>
+</html>
+Save this file inside your project folder (FormApp/).
+
+🪜 Step 2: Create FormServlet.java
+java
+Copy code
+import javax.servlet.*;
+import javax.servlet.http.*;
+import java.io.*;
+
+public class FormServlet extends HttpServlet {
+  protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+          throws ServletException, IOException {
+    req.setCharacterEncoding("UTF-8");
+    String name = req.getParameter("name");
+    String email = req.getParameter("email");
+
+    resp.setContentType("text/html;charset=UTF-8");
+    PrintWriter out = resp.getWriter();
+    out.println("<!doctype html><html><body>");
+    out.println("<h2>Received Data</h2>");
+    out.println("<p>Name: " + (name == null ? "(empty)" : name) + "</p>");
+    out.println("<p>Email: " + (email == null ? "(empty)" : email) + "</p>");
+    out.println("</body></html>");
+  }
+}
+🪜 Step 3: Compile the Servlet
+Open terminal (or Command Prompt):
+
+bash
+Copy code
+cd "C:\Program Files\Apache Software Foundation\Tomcat 9.0\webapps\FormApp\WEB-INF\classes"
+javac -cp "C:\Program Files\Apache Software Foundation\Tomcat 9.0\lib\servlet-api.jar" FormServlet.java
+✅ This generates: FormServlet.class
+
+🪜 Step 4: Configure web.xml
+Inside WEB-INF/, create web.xml:
+
+xml
+Copy code
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://java.sun.com/xml/ns/javaee" version="3.0">
+  <servlet>
+    <servlet-name>FormServlet</servlet-name>
+    <servlet-class>FormServlet</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>FormServlet</servlet-name>
+    <url-pattern>/FormServlet</url-pattern>
+  </servlet-mapping>
+</web-app>
+🪜 Step 5: Start Tomcat Server
+Run Tomcat (via bin/startup.bat or through your IDE).
+
+🪜 Step 6: Open in Browser
+Go to:
+
+bash
+Copy code
+http://localhost:8080/FormApp/form.html
+➡️ Fill the form and submit.
+
+You’ll see:
+
+makefile
+Copy code
+Received Data
+Name: Nikhil
+Email: nikhil@gmail.com
+✅ Output Screenshot (expected)
+makefile
+Copy code
+Received Data
+Name: Rama
+Email: rama@mail.com
+
+method-2
+FormApp
+ └── src
+      └── main
+           ├── java          ← ✅ Create servlet here
+           │    └── com.formapp  (you can make your own package)
+           │         └── FormServlet.java
+           └── webapp
+                ├── form.html
+                ├── META-INF
+                └── WEB-INF
+                     └── web.xml
+
+🪜 Step 1: Install & Configure Apache Tomcat
+
+Download Tomcat 9 or 10
+.
+
+Extract it somewhere (e.g. C:\apache-tomcat-10.1).
+
+Open Eclipse → Window → Preferences → Server → Runtime Environments → Add
+→ Select Apache Tomcat v10.1 → Browse to your folder → Finish ✅
+
+🪜 Step 2: Create Dynamic Web Project
+
+Go to File → New → Dynamic Web Project
+
+Project name: FormApp
+
+Target runtime: Select Apache Tomcat v10.1
+
+Dynamic web module version: 4.0
+
+Click Finish
+
+🪜 Step 3: Create HTML Form
+
+Right-click your project → New → HTML File → Name it form.html
+Paste this simple form 👇
+
+<!doctype html>
+<html>
+<head><title>Form Example</title></head>
+<body>
+  <h2>Enter Details</h2>
+  <form action="FormServlet" method="post">
+    Name: <input type="text" name="name"><br><br>
+    Email: <input type="email" name="email"><br><br>
+    <input type="submit" value="Submit">
+  </form>
+</body>
+</html>
+
+🪜 Step 4: Create the Servlet
+
+Right-click your project → New → Servlet
+
+Name: FormServlet
+
+Package: (leave blank or use) servlets
+
+URL mapping: /FormServlet
+
+Click Finish
+
+Eclipse automatically creates FormServlet.java inside
+Java Resources → src → FormServlet.java
+
+Replace its content with 👇
+
+import javax.servlet.*;
+import javax.servlet.http.*;
+import java.io.*;
+
+public class FormServlet extends HttpServlet {
+  protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+          throws ServletException, IOException {
+    req.setCharacterEncoding("UTF-8");
+    String name = req.getParameter("name");
+    String email = req.getParameter("email");
+
+    resp.setContentType("text/html;charset=UTF-8");
+    PrintWriter out = resp.getWriter();
+    out.println("<!doctype html><html><body>");
+    out.println("<h2>Received Data</h2>");
+    out.println("<p>Name: " + (name == null ? "(empty)" : name) + "</p>");
+    out.println("<p>Email: " + (email == null ? "(empty)" : email) + "</p>");
+    out.println("</body></html>");
+  }
+}
+
+🪜 Step 5: Deploy & Run
+
+Right-click the project → Run As → Run on Server
+
+Choose Tomcat v10.1 → Finish
+
+Eclipse starts the server automatically.
+
+🪜 Step 6: Open in Browser
+
+Go to:
+
+http://localhost:8080/FormApp/form.html
+
+
+✅ Enter your name and email → click Submit.
+
+You’ll see output like:
+
+Received Data
+Name: Nikhil
+Email: nikhil@gmail.com
