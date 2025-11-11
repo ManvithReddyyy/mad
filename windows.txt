@@ -176,6 +176,74 @@ body{
 </body>
 </html>
 
+----------------------
+2. 2 Define a Document Type Definition (DTD) and XML schema to validate the above
+created XML Documents 
+
+2 b)
+---------- xml validation
+
+
+<?xml version="1.0"?>
+<!DOCTYPE students [
+  <!ELEMENT students (student+)>
+  <!ELEMENT student (id, name)>
+  <!ELEMENT id (#PCDATA)>
+  <!ELEMENT name (#PCDATA)>
+]>
+<students>
+  <student>
+    <id>101</id>
+    <name>Abhigna</name>
+  </student>
+</students>
+
+
+
+
+students.xml
+<?xml version="1.0" encoding="UTF-8"?>
+<students xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="students.xsd">
+
+    <student>
+        <id>1</id>
+        <name>Abhigna</name>
+        <age>20</age>
+    </student>
+
+    <student>
+        <id>2</id>
+        <name>Shanti</name>
+        <age>21</age>
+    </student>
+
+</students>
+
+🧾 students.xsd
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:element name="students">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="student" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="id" type="xs:integer"/>
+              <xs:element name="name" type="xs:string"/>
+              <xs:element name="age" type="xs:integer"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+</xs:schema>
+
+-----------------------------
+
 -----------------------
 3.1 jdbc connection
 
@@ -1305,5 +1373,6 @@ public class SimpleJDBCExample {
         }
     }
 }
+
 
 
